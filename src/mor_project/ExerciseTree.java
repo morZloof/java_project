@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public class ExerciseTree extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
@@ -27,14 +26,12 @@ public class ExerciseTree extends HttpServlet{
 		/*                    Question number 3                    */
 		int base = 20;
 		int exp = 13;
-		int resulte3 = base;
+		long resulte3 = 20;
 		
-		String line3 = new String("a" + base);
-		
-		for(int i=0; i<exp ;i++){
-			resulte3 *= exp;
+		for(int i=1; i<exp ;i++){
+			resulte3 *= base;
 		}
-		line3 = new String("<b>Calculation 3:</b>  Power of " + base + " with exp of " + exp + " is " + resulte3);
+		String line3 = new String("<b>Calculation 3:</b>  Power of " + base + " with exp of " + exp + " is " + resulte3);
 		
 		/*                    result                    */
 		String resultStr = line1 + "<br>" + line2 + "<br>" + line3;
