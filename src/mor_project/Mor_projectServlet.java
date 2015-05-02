@@ -1,25 +1,40 @@
 package mor_project;
-import java.io.IOException;
-import javax.servlet.http.*;
 
-@SuppressWarnings("serial")
-public class Mor_projectServlet extends HttpServlet {
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Mor_projectServlet extends HttpServlet{
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+		throws ServletException, IOException {
+		resp.setContentType("text/html");
 		
-		int num1 = 4;
-		int num2 = 3;
-		int num3 = 7;
+		/*                    Question number 1                    */
+		double area = 50;
+		double radius = area * Math.PI;
+		String line1 = new String("<b>Calculation 1:</b> Area of circle with radius " + area + " is: " + radius);
 		
-		// create number 49 from this numbers 4,3,7 
-		int num123 = num1*num1*num1-num2-num1-num3-num1+num2;
+		/*                    Question number 2                    */
+		int degrees = 30;
+		int hypotenuse = 50;
+		double result = Math.sin(Math.PI*degrees / hypotenuse);
+		String line2 = new String("<b>Calculation 2:</b> Length of opposite where angle B is " + degrees + " and hypotenuse length is " + hypotenuse + "cm is " + result + "cm");
 		
-		int number2 = 2;
-		int number5 = 5;
-		String resulte = "Result of " + number5 +"*" + number2 + " = " + (number2*number5); 
+		/*                    Question number 3                    */
+		int base = 20;
+		int exp = 13;
+		long resulte3 = 20;
 		
-		resp.setContentType("text/plain");
-		resp.getWriter().println("Hello Hanan, have a beautiful day(and try to give me 100 because i am realy try to be smart)!");
-		// create number 10 from 5 and 2
-		resp.getWriter().println(resulte);
+		for(int i=1; i<exp ;i++){
+			resulte3 *= base;
+		}
+		String line3 = new String("<b>Calculation 3:</b>  Power of " + base + " with exp of " + exp + " is " + resulte3);
+		
+		/*                    result                    */
+		String resultStr = line1 + "<br>" + line2 + "<br>" + line3;
+		resp.getWriter().println(resultStr);
 	}
-}	
+}

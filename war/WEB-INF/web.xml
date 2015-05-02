@@ -12,13 +12,20 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
 		<servlet-name>ExerciseTree</servlet-name>
 		<servlet-class>mor_project.ExerciseTree</servlet-class>
-	</servlet>s
+	</servlet>
+	<servlet>
+		<servlet-name>PortfolioServlet</servlet-name>
+		<servlet-class>servlet.PortfolioServlet</servlet-class>
+	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>Mor_project</servlet-name>
 		<url-pattern>/mor_project</url-pattern>
 	</servlet-mapping>
-	
+	<servlet-mapping>
+		<servlet-name>PortfolioServlet</servlet-name>
+		<url-pattern>/portfolio</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ExerciseTree</servlet-name>
 		<url-pattern>/ExerciseTree</url-pattern>
