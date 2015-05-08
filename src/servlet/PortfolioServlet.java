@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import model.Portfolio;
 import service.PortforlioManager;
 
+/** 
+ 	student: mor zloof
+ */
 @SuppressWarnings("serial")
 public class PortfolioServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -27,7 +30,7 @@ public class PortfolioServlet extends HttpServlet {
 		resp.getWriter().println("<br>");
 		resp.getWriter().println(portfolio2.getHtmlString());
 		
-		portfolio.removeStock(portfolio.getStocks()[0]);
+		portfolio.removeStock(portfolio.getStocks()[0].getSymbol());
 		
 		resp.getWriter().println(portfolio.getHtmlString());
 		resp.getWriter().println("<br>");

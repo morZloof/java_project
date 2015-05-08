@@ -8,23 +8,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class Portfolio {
-	private final static int MAX_PORTFOLIO_SIZE = 5; 
-	private Stock[] stocks;
-	private String title = "My Portfolio";
-	private int portfolioSize = 0;
+	private final static int MAX_PORTFOLIO_SIZE = 5;
+	private Stock[] stocks; 
+	private String title = "My Portfolio"; 
+	private int portfolioSize = 0; 
 	
+	/** 
+ 		student: mor zloof
+	 */
 	public Portfolio() {
 		this.stocks = new Stock[MAX_PORTFOLIO_SIZE];
 		this.title = new String("");	
 		this.portfolioSize = 0;
 	}
 	
-
-	public Portfolio(Portfolio portfolio){
-		this();
-		this.setTitle(portfolio.getTitle());
-		this.setPortfolioSize(portfolio.getPortfolioSize());
-						
+	 	public Portfolio(Portfolio portfolio){
+		this.title = new String(portfolio.title);
+		this.portfolioSize = portfolio.getPortfolioSize();
+		
+		this.stocks = new Stock[MAX_PORTFOLIO_SIZE];
 		for (int i = 0; i < this.portfolioSize; i++)
 		{
 			this.stocks[i] = new Stock(portfolio.getStocks()[i]);
@@ -67,17 +69,23 @@ public class Portfolio {
 		}
 	}
 	
-	public void removeStock(Stock stock) {
+	public void removeStock(String symbol) {
+		if (portfolioSize == 1 || symbol.equals(stocks[portfolioSize-1].getSymbol())){
+			stocks[portfolioSize-1] = null;
+			portfolioSize--;
+			return;
+		}
 		for (int i = 0; i < portfolioSize; i++){
-			if (stock == null){ //check validate input
+			if (symbol == null){
 				return;
 			}
-			if (stock.getSymbol().equals(stocks[i].getSymbol()))
+			else if (symbol.equals(stocks[i].getSymbol()))
 			{
 				stocks[i] = stocks[portfolioSize - 1];
 				stocks[portfolioSize - 1] = null;
 				portfolioSize--;
 			}
 		}
+		return;
 	}
 }
