@@ -3,25 +3,27 @@ package model;
 import java.text.DateFormat;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import model.Portfolio.ALGO_RECOMMENDATION;
 
 public class Stock {
-
-	private final static int BUY = 0, SELL = 1, REMOVE = 2, HOLD = 3;
 	
+	//Data Members
+	private float balance;
 	private String symbol;
 	private float ask;
 	private float bid;
 	private Date date;
-	private int recommendation;
+	private ALGO_RECOMMENDATION recommendation;
 	private int stockQuantity;
 
+	/* student : mor zloof */
 	public Stock()
 	{
 		symbol = "";
 		ask = 0;
 		bid = 0;
 		setDate(new Date(date.getTime()));
-		recommendation = 0;
+		//recommendation = ALGO_RECOMMENDATION.HOLD;
 		stockQuantity = 0;
 	}
 	
@@ -30,17 +32,30 @@ public class Stock {
 			this.ask = ask;
 			this.bid = bid;
 			this.date = date;
-			this.recommendation = 0;
+			this.recommendation = ALGO_RECOMMENDATION.HOLD;
 			this.stockQuantity = 0;
 	}
-	
+
 	public Stock(Stock stock){
-		this.symbol = stock.getSymbol();
-		this.ask = stock.getAsk();
-		this.bid = stock.getBid();
-		this.date = stock.getDate();
+		this(new String(stock.getSymbol()), stock.getAsk(), stock.getBid(), new Date(stock.getDate().getTime()));
+		
 		this.recommendation = stock.getRecommendation();
 		this.stockQuantity = stock.getStockQuantity();
+	}
+	
+	public void updateBalance(float amount){
+		if (this.balance + amount >= 0){
+			this.balance += amount;
+		}
+		else
+			System.out.println("Negative Balance!!!");
+	}
+
+	public float getBalance() {
+		return balance;
+	}
+	public void setBalance(float balance) {
+		this.balance = balance;
 	}
 
 	public String getSymbol() {
@@ -75,18 +90,18 @@ public class Stock {
 		this.stockQuantity = stockQuantity;
 	}
 
-	public int getRecommendation() {
+	public ALGO_RECOMMENDATION getRecommendation() {
 		return recommendation;
 	}
 
-	public void setRecommendation(int recommendation) {
+	public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
 		this.recommendation = recommendation;
 	}
 	
 	public String getHtmlDescription() {
 		DateFormat dateFt = new SimpleDateFormat("MM/dd/yyyy");
 		String dateStr = dateFt.format(date);
-		String resultStr = new String("<b>Stock symbol is: </b>" + getSymbol() + "<b> ask: </b>" + getAsk() + "<b> Bid: </b>" + getBid() + "<b> Date: </b>" + dateStr);
+		String resultStr = new String("<b>Stock symbol is: </b>" + getSymbol() + "<b> ask: </b>" + getAsk() + "<b> Bid: </b>" + getBid() + "<b> Date: </b>" + dateStr + " The quantity is: " + this.getStockQuantity());
 		
 		return resultStr;
 	}

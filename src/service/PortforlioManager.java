@@ -9,24 +9,28 @@ import java.util.Calendar;
 public class PortforlioManager {
 	/* mor zloof*/
 	public Portfolio getPortfolio(){
-		Portfolio portfolio = new Portfolio();
-		portfolio.setTitle("portfolio");	
+		Portfolio myPortfolio = new Portfolio();
+		myPortfolio.setTitle("Exercise 7 Portfolio");
+		myPortfolio.updateBalance(10000f);
 		Calendar cal = Calendar.getInstance();
-		cal.set(2014, 10, 15);
+		cal.set(2014, 11, 15);
 		
 		Date date1 = cal.getTime();
 		Date date2 = cal.getTime();
 		Date date3 = cal.getTime();
 		
-		Stock s1 = new Stock("PIH", 13.1f, 12.4f, date1);
-		Stock s2 = new Stock("AAL", 5.78f, 5.5f, date2);
-		Stock s3 = new Stock("CAAS", 32.2f, 31.5f, date3);
+		Stock s1 = new Stock("PIH",  10f, 8.5f, date1);
+		Stock s2 = new Stock("AAL", 30f, 25.5f, date2);
+		Stock s3 = new Stock("CAAS", 20f, 15.5f, date3);
 		
-		portfolio.addStock(s1);
-		portfolio.addStock(s2);
-		portfolio.addStock(s3);
+		myPortfolio.buyStock(s1, 20);
+		myPortfolio.buyStock(s2, 30);
+		myPortfolio.buyStock(s3, 40);
 		
-		return portfolio;
+		myPortfolio.sellStock("AAL", -1);
+		myPortfolio.removeStock("CAAS");
+		
+		return myPortfolio;
 		
 	}
 }
