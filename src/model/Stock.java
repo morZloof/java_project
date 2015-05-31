@@ -1,87 +1,84 @@
 package model;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.sql.Date;
+
 import model.Portfolio.ALGO_RECOMMENDATION;
 
-public class Stock {
-	
-	//Data Members
-	private float balance;
+import org.algo.model.StockInterface;
+/**
+mor zloof
+ */
+
+@SuppressWarnings("unused")
+public class Stock implements StockInterface {
+
 	private String symbol;
 	private float ask;
 	private float bid;
-	private Date date;
-	private ALGO_RECOMMENDATION recommendation;
-	private int stockQuantity;
+	private transient java.util.Date date;
+	private service.PortfolioManager.ALGO_RECOMMENDATION recommendation;
+	private int stockQuantity=0;
 
-	/* student : mor zloof */
-	public Stock()
-	{
-		symbol = "";
-		ask = 0;
-		bid = 0;
-		setDate(new Date(date.getTime()));
-		//recommendation = ALGO_RECOMMENDATION.HOLD;
-		stockQuantity = 0;
-	}
-	
-	public Stock(String symbol, float ask, float bid, Date date) {
-			this.symbol = symbol;
-			this.ask = ask;
-			this.bid = bid;
-			this.date = date;
-			this.recommendation = ALGO_RECOMMENDATION.HOLD;
-			this.stockQuantity = 0;
+	public Stock(Stock stock) {
+		this.symbol = new String(stock.getSymbol());
+		this.ask = stock.ask;
+		this.bid = stock.bid;
+		this.date = new java.util.Date(stock.getDate().getTime());
 	}
 
-	public Stock(Stock stock){
-		this(new String(stock.getSymbol()), stock.getAsk(), stock.getBid(), new Date(stock.getDate().getTime()));
-		
-		this.recommendation = stock.getRecommendation();
-		this.stockQuantity = stock.getStockQuantity();
-	}
-	
-	public void updateBalance(float amount){
-		if (this.balance + amount >= 0){
-			this.balance += amount;
-		}
-		else
-			System.out.println("Negative Balance!!!");
+	public Stock(String newSymbol, float newBid, float newAsk,
+			java.util.Date newDate) { // creating a new stock with a known data
+		this.symbol = newSymbol;
+		this.bid = newBid;
+		this.ask = newAsk;
+		this.date = newDate;
+
 	}
 
-	public float getBalance() {
-		return balance;
-	}
-	public void setBalance(float balance) {
-		this.balance = balance;
+	/**
+	 * + * Returns html string that described this stock + * @return html string
+	 * that represents this stock +
+	 */
+	public String getHtmlDescription() {
+		return "<b>Stock Symbol: </b>" + getSymbol() + ",<b> ask: </b>"
+				+ getAsk() + ", <b>bid: </b>" + getBid() + ", <b>date: </b>"
+				+ getDate().getDate() + "/" + getDate().getMonth() + "/"
+				+ getDate().getYear() + ",<b> quantity: </b>"
+				+ getStockQuantity();
 	}
 
 	public String getSymbol() {
 		return symbol;
 	}
+
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
+
 	public float getAsk() {
 		return ask;
 	}
+
 	public void setAsk(float ask) {
 		this.ask = ask;
 	}
+
 	public float getBid() {
 		return bid;
 	}
+
 	public void setBid(float bid) {
 		this.bid = bid;
 	}
-	public Date getDate() {
+
+	public java.util.Date getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+
+	public void setDate(java.util.Date date) {
 		this.date = date;
 	}
+
 	public int getStockQuantity() {
 		return stockQuantity;
 	}
@@ -90,19 +87,15 @@ public class Stock {
 		this.stockQuantity = stockQuantity;
 	}
 
-	public ALGO_RECOMMENDATION getRecommendation() {
+	public service.PortfolioManager.ALGO_RECOMMENDATION getRecommendation() {
 		return recommendation;
 	}
 
-	public void setRecommendation(ALGO_RECOMMENDATION recommendation) {
-		this.recommendation = recommendation;
+	public void setRecommendation(service.PortfolioManager.ALGO_RECOMMENDATION algo_RECOMMENDATION) {
+		this.recommendation = algo_RECOMMENDATION;
 	}
-	
-	public String getHtmlDescription() {
-		DateFormat dateFt = new SimpleDateFormat("MM/dd/yyyy");
-		String dateStr = dateFt.format(date);
-		String resultStr = new String("<b>Stock symbol is: </b>" + getSymbol() + "<b> ask: </b>" + getAsk() + "<b> Bid: </b>" + getBid() + "<b> Date: </b>" + dateStr + " The quantity is: " + this.getStockQuantity());
-		
-		return resultStr;
+
+	public void setDate(long time) {
+		this.date = new Date(time * 1000);
 	}
 }
