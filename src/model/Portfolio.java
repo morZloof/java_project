@@ -24,7 +24,7 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * This is an empty c'tor.
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 30.4.15
 	 */
 
@@ -38,7 +38,7 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * This is a copy c'tor (including the array).
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 30.4.15
 	 */
 	public Portfolio(Portfolio portfolio) {
@@ -94,10 +94,8 @@ public class Portfolio implements PortfolioInterface {
 	}
 
 	/**
-	 * This method is recieving a stock and adding it into the array, checking
-	 * validance at first.
-	 * 
-	 * @author Oz Gonen
+
+	 * @author mor zloof
 	 * @throws StockNotExists
 	 * @throws StockAlreadyExistsException
 	 * @throws PortfolioFullException
@@ -127,11 +125,8 @@ public class Portfolio implements PortfolioInterface {
 		}
 	}
 
-	/**
-	 * This method is updating balance of portfolio, checking validance at
-	 * first.
-	 * 
-	 * @author Oz Gonen
+	/** 
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 	public void updateBalance(float amount) throws BalanceException {
@@ -145,9 +140,7 @@ public class Portfolio implements PortfolioInterface {
 	}
 
 	/**
-	 * This method is removing a stock, checking validance at first.
-	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 
@@ -191,7 +184,7 @@ public class Portfolio implements PortfolioInterface {
 	 * This method is selling quantity of wanted stock, checking validance at
 	 * first.
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 
@@ -233,7 +226,7 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * This method is buying a stock, checking validance at first.
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @throws StockAlreadyExistsException
 	 * @throws BalanceException
 	 * @throws StockNotExists
@@ -304,7 +297,7 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * This method is getting all stocks value in portfolio.
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 
@@ -325,7 +318,7 @@ public class Portfolio implements PortfolioInterface {
 	 * This method is meant for returning a string that will keep all stocks in
 	 * the portfolio.
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 23.04.15
 	 */
 	public String getHtmlString() {
@@ -347,7 +340,7 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * This method finds a stock by its symbol validance at first.
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 01.06.15
 	 */
 

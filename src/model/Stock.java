@@ -27,7 +27,7 @@ public class Stock implements StockInterface {
 	 * This method is an empty c'tor of stock which initializes an stock's
 	 * instance.
 	 * 
-	 * @author Daniel Hen
+	 * @author mor zloof
 	 * @param stockInterface
 	 * @since 30.04.15
 	 */
@@ -42,7 +42,7 @@ public class Stock implements StockInterface {
 	/**
 	 * This method is a c'tor of stock.
 	 * 
-	 * @author Daniel Hen
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 	public Stock(String symbol, float ask, float bid, Date date) {
@@ -57,7 +57,7 @@ public class Stock implements StockInterface {
 	/**
 	 * This method is a copy c'tor of stock.
 	 * 
-	 * @author Daniel Hen
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 
@@ -138,7 +138,7 @@ public class Stock implements StockInterface {
 	 * This method is meant for setting the current date and format and
 	 * returning it back as a string.
 	 * 
-	 * @author Daniel Hen
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 	public String getHtmlDescription() {

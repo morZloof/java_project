@@ -47,7 +47,7 @@ public class PortfolioManager implements PortfolioManagerInterface {
 	/**
 	 * This method is meant for designing the portfolio alongside its stocks.
 	 * 
-	 * @author Oz Gonen
+	 * @author mor zloof
 	 * @since 30.04.15
 	 */
 	private DatastoreService datastoreService = ServiceManager
