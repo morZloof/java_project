@@ -8,235 +8,65 @@ import model.Stock;
 /**
  mor zloof
  */
-public class Portfolio implements PortfolioInterface {
+import exception.*;
 
+public class Portfolio implements PortfolioInterface {
 	public enum ALGO_RECOMMENDATION {
-		BUY, SELL, REMOVE, HOLD
+		BUY, SELL, REMOVE, HOLD;
 	}
 
-	private String title;
-	private final static int MAX_PORTFOLIO_SIZE = 5;
-	private Stock[] stocks;
-	private int portfolioSize = 0;
-	private float balance;
+	private final static int MAX_PORTFOLIO_SIZE = 5; // const - "Physical" size
+	private StockInterface[] stocks; // an array of stocks
+	private String title = "My Portfolio"; // title of portfolio
+	private int portfolioSize = 0; // "logical" size
+	private float balance = 0;
+
+	/**
+	 * This is an empty c'tor.
+	 * 
+	 * @author Oz Gonen
+	 * @since 30.4.15
+	 */
 
 	public Portfolio() {
-		stocks = new Stock[MAX_PORTFOLIO_SIZE];
-	}
-
-	public Portfolio(String title) {
-		this.title = title;
 		this.stocks = new Stock[MAX_PORTFOLIO_SIZE];
+		this.title = new String("");
 		this.portfolioSize = 0;
+		this.balance = 0;
 	}
 
 	/**
-	 * Create and returns a copy of the given portfolio, using copy-ctor
+	 * This is a copy c'tor (including the array).
 	 * 
-	 * @param portfolio
-	 *            - the portfolio you want to copy
-	 * @return new copied portfolio
+	 * @author Oz Gonen
+	 * @since 30.4.15
 	 */
 	public Portfolio(Portfolio portfolio) {
-		this(new String(portfolio.getTitle()));
+		this.title = new String(portfolio.title);
+		this.portfolioSize = portfolio.getPortfolioSize();
 
-		for (int i = 0; i < portfolio.getPortfolioSize(); i++) {
-			this.addStock(new Stock(portfolio.stocks[i]));
+		this.stocks = new Stock[MAX_PORTFOLIO_SIZE];
+		for (int i = 0; i < this.portfolioSize; i++) {
+			this.stocks[i] = new Stock(portfolio.getStocks()[i]);
 		}
+		this.balance = portfolio.balance;
 	}
 
 	public Portfolio(Stock[] stockArray) {
-		this.title = new String();
-		this.portfolioSize = getPortfolioSize();
-		this.balance = getBalance();
-		this.stocks = stockArray;
-	}
-	
-
-	/**
-	 * Updating the portfolio balance
-	 * 
-	 * @param amount
-	 *            - the amount that need to be added to the balance
-	 */
-	public void updateBalance(float amount) {
-		if (this.balance + amount >= 0) {
-			this.balance += amount;
+		this.portfolioSize = 0;
+		this.balance = 0;
+		this.stocks = new Stock[MAX_PORTFOLIO_SIZE];
+		this.title = null;
+		for (int i = 0; i < stockArray.length; i++) {
+			this.stocks[i] = stockArray[i];
+			this.portfolioSize++;
 		}
 	}
 
-	/**
-	 * Adding stock to the portfolio
-	 * 
-	 * @param stock
-	 *            - the stock to add to this portfolio
-	 */
-	public void addStock(Stock newStock) {
-		boolean check = false;
-		for (int i = 0; i < getPortfolioSize(); i++) {
-			if (stocks[i].getSymbol().equals(newStock.getSymbol())) {
-				check = true;
-				break;
-			}
-		}
-			if (check == false) {
-			stocks[portfolioSize] = newStock;
-			stocks[portfolioSize].setStockQuantity(0);
-			portfolioSize++;
-		}
-
-		else if (portfolioSize == MAX_PORTFOLIO_SIZE) {
-			System.out.println("Can’t add new stock, portfolio can have only "
-					+ MAX_PORTFOLIO_SIZE + " stocks");
-		}
-	}
-
-	/**
-	 * Removing a stock from the portfolio
-	 * 
-	 * @param symbol
-	 *            - the symbol of the stock you want to remove
-	 * @return true if the stock was successfully removed. false if not.
-	 */
-	public boolean removeStock(String symbol) {
-		float check = portfolioSize;
-		for (int i = 0; i < portfolioSize; i++) {
-			if (stocks[i].getSymbol().equals(symbol)) {
-				sellStock(symbol, -1);
-				stocks[i] = null;
-				portfolioSize--;
-			}
-		}
-		int j = 0;
-		while (j < portfolioSize) {
-			if (stocks[j] == null && stocks[j + 1] != null) {
-				stocks[j] = stocks[j + 1];
-				stocks[j + 1] = null;
-			}
-			j++;
-		}
-		if (portfolioSize < check) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Selling a stock in the portfolio
-	 * 
-	 * @param symbol
-	 *            - the symbol of the stock you want to sell
-	 * @param quantity
-	 *            - the quantity you want to sell
-	 * @return true if the stock was successfully sell, false if not
-	 */
-	public boolean sellStock(String symbol, int quantity) {
-		for (int i = 0; i < portfolioSize; i++)
-			if (stocks[i].getSymbol().equals(symbol)) {
-				if (stocks[i].getStockQuantity() - quantity < 0) {
-					System.out.println("Not enough stocks to sell");
-					return false;
-				} else if (quantity == -1) {
-					balance += stocks[i].getStockQuantity()
-							* stocks[i].getBid();
-					stocks[i].setStockQuantity(0);
-					return true;
-				} else {
-					balance += quantity * stocks[i].getBid();
-					stocks[i].setStockQuantity(stocks[i].getStockQuantity()
-							- quantity);
-					return true;
-				}
-			}
-		return false;
-	}
-
-	/**
-	 * Buying a stock in the portfolio
-	 * 
-	 * @param symbol
-	 *            - the symbol of the stock you want to buy
-	 * @param quantity
-	 *            - the quantity you want to buy
-	 * @return true if the stock was successfully bought, false if not
-	 */
-	public boolean buyStock(Stock stock, int quantity) {
-		boolean check = false;
-		for (int i = 0; i < portfolioSize; i++) {
-			if (stock.getSymbol().equals(stocks[i].getSymbol()))
-				check = true;
-		}
-		if (check == false) {
-			addStock(stock);
-		}
-
-		for (int i = 0; i < portfolioSize; i++)
-			if (stock.getSymbol().equals(stocks[i].getSymbol())) {
-				if (quantity == -1) {
-					int temp = (int) (balance / stocks[i].getAsk());
-
-					balance = balance - (stocks[i].getAsk() * temp);
-					stocks[i].setStockQuantity(stocks[i].getStockQuantity()
-							+ temp);
-					return true;
-				}
-				if (balance < stocks[i].getAsk() * quantity) {
-					System.out
-							.println("Not enough balance to complete purchase");
-					return false;
-				} else {
-					balance = balance - (stocks[i].getAsk() * quantity);
-					stocks[i].setStockQuantity(stocks[i].getStockQuantity()
-							+ quantity);
-					return true;
-				}
-			}
-		return false;
-	}
-
-	public float getStocksValue() { // returns total value of all stocks
-		float sum = 0;
-		for (int i = 0; i < portfolioSize; i++) {
-			sum += stocks[i].getStockQuantity() * stocks[i].getAsk();
-		}
-		return sum;
-	}
-
-	/**
-	 * Returns html string that described this portfolio
-	 * 
-	 * @return html string that represents this current portfolio and its stocks
-	 */
-	public String getHtmlString() {
-		String ret = ("<br><h1>" + getTitle() + "</h1>");
-		int i = 0;
-		while (stocks[i] != null) {
-			ret += "<br>" + stocks[i].getHtmlDescription();
-			i++;
-		}
-
-		ret += ("<br><br>Portfolio title: " + getTitle()
-				+ "<br>Total Portfolio value: " + getTotalValue()
-				+ "$, Total Stock Value: " + getStocksValue() + "$, Balance: "
-				+ getBalance() + "$.");
-		return ret;
-	}
-
-	public float getTotalValue() {
-		return getStocksValue() + balance;
-	}
-
-	public float getBalance() {
-		return balance;
-	}
-
+	// Getters & Setters - only what needed (not all of, cause there is no set
+	// for a const, for example)
 	public StockInterface[] getStocks() {
-		return (StockInterface[]) stocks;
-	}
-
-	public void setBalance(float balance) {
-		this.balance = balance;
+		return stocks;
 	}
 
 	public String getTitle() {
@@ -247,10 +77,6 @@ public class Portfolio implements PortfolioInterface {
 		this.title = title;
 	}
 
-	public int getMAX_PORTFOLIO_SIZE() {
-		return MAX_PORTFOLIO_SIZE;
-	}
-
 	public int getPortfolioSize() {
 		return portfolioSize;
 	}
@@ -259,20 +85,283 @@ public class Portfolio implements PortfolioInterface {
 		this.portfolioSize = portfolioSize;
 	}
 
-	public void setStocks(Stock[] stocks) {
-		this.stocks = stocks;
+	public float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(float balance) {
+		this.balance = balance;
+	}
+
+	/**
+	 * This method is recieving a stock and adding it into the array, checking
+	 * validance at first.
+	 * 
+	 * @author Oz Gonen
+	 * @throws StockNotExists
+	 * @throws StockAlreadyExistsException
+	 * @throws PortfolioFullException
+	 * @since 30.04.15
+	 */
+
+	public void addStock(Stock stock) throws PortfolioFullException,
+			StockAlreadyExistsException, StockNotExists {
+		if (this.portfolioSize == MAX_PORTFOLIO_SIZE) {
+			throw new PortfolioFullException();
+		}
+		if (stock == null) {
+			throw new StockNotExists("Check input validance!");
+		}
+		for (int i = 0; i < this.portfolioSize; i++) {
+			if (stock.getSymbol().equals(stocks[i].getSymbol())) {
+				throw new StockAlreadyExistsException(
+						"You already own that stock!");
+			}
+		}
+		if (this.portfolioSize < MAX_PORTFOLIO_SIZE) {
+			stocks[this.portfolioSize] = stock;
+			((Stock) stocks[this.portfolioSize]).setStockQuantity(0); // already zero
+																	// at
+																	// start...
+			this.portfolioSize++;
+		}
+	}
+
+	/**
+	 * This method is updating balance of portfolio, checking validance at
+	 * first.
+	 * 
+	 * @author Oz Gonen
+	 * @since 30.04.15
+	 */
+	public void updateBalance(float amount) throws BalanceException {
+		float temp = this.balance + amount;
+		if (temp < 0) {
+			throw new BalanceException();
+		} else {
+			this.balance = temp;
+			System.out.println("Balance updated!");
+		}
+	}
+
+	/**
+	 * This method is removing a stock, checking validance at first.
+	 * 
+	 * @author Oz Gonen
+	 * @since 30.04.15
+	 */
+
+	public void removeStock(String symbol) throws StockNotExists,
+			BalanceException, SellingOverQuantityException {
+		boolean StillRun = true;
+		if (symbol == null) { // check validate input, if bad input return
+								// unsucceed.
+			throw new StockNotExists("invalid input, please try again");
+		}
+		if (portfolioSize == 1
+				|| symbol.equals(stocks[portfolioSize - 1].getSymbol())) {
+			/*
+			 * in case the stocks array has 1 stock or symbol is last node in
+			 * array
+			 */
+			
+			this.sellStock(stocks[portfolioSize - 1].getSymbol(), -1);
+
+			stocks[portfolioSize - 1] = null;
+			portfolioSize--;
+			// operation succeed
+		}
+		for (int i = 0; i < portfolioSize && StillRun; i++) { // any other case,
+																// 2-5 stocks in
+																// portfolio
+			if (symbol.equals(stocks[i].getSymbol())) {
+				this.sellStock(stocks[portfolioSize - 1].getSymbol(), -1);
+				stocks[i] = stocks[portfolioSize - 1];
+				stocks[portfolioSize - 1] = null;
+				portfolioSize--;
+				StillRun = false; // no need to "re-run" in loop
+			}
+		}
+		if (StillRun == true){
+			throw new StockNotExists();
+		}
+	}
+
+	/**
+	 * This method is selling quantity of wanted stock, checking validance at
+	 * first.
+	 * 
+	 * @author Oz Gonen
+	 * @since 30.04.15
+	 */
+
+	public void sellStock(String symbol, int quantity) throws StockNotExists,
+			SellingOverQuantityException {
+		boolean Exist = false;
+		if (symbol == null || quantity < -1) { // validance check
+			throw new StockNotExists("Invalid input, please try again!");
+		}
+		for (int i = 0; i < this.portfolioSize && Exist == false; i++) {
+			if (symbol.equals(stocks[i].getSymbol())) {
+				Exist = true;
+				if (((Stock) this.stocks[i]).getStockQuantity() - quantity < 0) {
+					throw new SellingOverQuantityException();
+
+				} else if (quantity == -1) {
+					this.balance += ((Stock) this.stocks[i]).getStockQuantity()
+							* this.stocks[i].getBid();
+					((Stock) this.stocks[i]).setStockQuantity(0);
+					System.out.println("All stocks of " + symbol
+							+ " were sold!");
+
+				} else { // any other case
+					this.balance += quantity * this.stocks[i].getBid();
+					((Stock) this.stocks[i])
+							.setStockQuantity(((Stock) stocks[i])
+									.getStockQuantity() - quantity);
+					System.out.println("An amount of " + quantity
+							+ " of stock: " + symbol + " were sold!");
+				}
+			}
+		}
+		if (Exist == false) {
+			throw new StockNotExists(
+					"The stock you're trying to sell doesn't appear in portfolio");
+		}
+	}
+
+	/**
+	 * This method is buying a stock, checking validance at first.
+	 * 
+	 * @author Oz Gonen
+	 * @throws StockAlreadyExistsException
+	 * @throws BalanceException
+	 * @throws StockNotExists
+	 * @throws PortfolioFullException
+	 * @since 30.04.15
+	 */
+	public void buyStock(Stock stock, int quantity) throws BalanceException,
+			PortfolioFullException, StockNotExists, StockAlreadyExistsException {
+		boolean Exist = false;
+		int i = 0;
+		if (stock == null || quantity < -1) {
+			throw new StockNotExists("No null stock OR invalid quantity!");
+		}
+		if (quantity * stock.getAsk() > this.balance) {
+			throw new BalanceException();
+		}	
+		for (i = 0; i < this.portfolioSize; i++) {
+			if (stock.getSymbol().equals(this.stocks[i].getSymbol())) { //if exists
+				Exist = true;
+				if (quantity == -1) { // buy all of stock's quantity
+					int numOfStock = (int) this.balance
+							/ (int) this.stocks[i].getAsk();
+					this.balance -= numOfStock * this.stocks[i].getAsk();
+					((Stock) this.stocks[i])
+							.setStockQuantity(((Stock) this.stocks[i])
+									.getStockQuantity() + numOfStock);
+					System.out.println("All stocks of " + stock.getSymbol()
+							+ " Were bought successfuly!");
+
+				} else { // any other case
+					this.balance -= quantity * this.stocks[i].getAsk();
+					((Stock) this.stocks[i])
+							.setStockQuantity(((Stock) stocks[i])
+									.getStockQuantity() + quantity);
+					System.out.println("Amount of " + quantity
+							+ " stocks  of the stock " + stock.getSymbol()
+							+ " Were bought!");
+				
+				}
+				break; //stop the for loop, no need for more iterates in order for buying stocks.
+			}
+		}
+		// if the stock's not in array!
+		if (i == MAX_PORTFOLIO_SIZE) { // cannot add another stock
+			throw new PortfolioFullException();
+		} /*else if (Exist == false){ //Stock's not in array and we can add it!
+			// add the stock to the array
+			if (quantity == -1){
+			
+				int numOfStock = (int) this.balance
+						/ (int) this.stocks[i].getAsk();
+				this.balance -= numOfStock * this.stocks[i].getAsk();
+				((Stock) this.stocks[i])
+						.setStockQuantity(((Stock) this.stocks[this.portfolioSize - 1])
+								.getStockQuantity() + numOfStock);
+				System.out.println("All stocks of " + stock.getSymbol()
+						+ " Were bought successfuly!");
+			} else {
+				this.balance -= quantity * this.stocks[i].getAsk();
+				((Stock) this.stocks[i]).setStockQuantity(quantity);
+				System.out.println("Amount of " + quantity + " of the stock: "
+						+ stock.getSymbol() + " Were bought!");
+			}
+		}*/
+	}
+	
+
+	/**
+	 * This method is getting all stocks value in portfolio.
+	 * 
+	 * @author Oz Gonen
+	 * @since 30.04.15
+	 */
+
+	public float getStocksValue() {
+		float allValue = 0;
+		for (int i = 0; i < this.portfolioSize; i++) {
+			allValue += ((Stock) this.stocks[i]).getStockQuantity()
+					* this.stocks[i].getBid();
+		}
+		return allValue;
+	}
+
+	public float getTotalValue() {
+		return this.getStocksValue() + this.balance;
+	}
+
+	/**
+	 * This method is meant for returning a string that will keep all stocks in
+	 * the portfolio.
+	 * 
+	 * @author Oz Gonen
+	 * @since 23.04.15
+	 */
+	public String getHtmlString() {
+		String resStr = new String("<h1>" + getTitle() + "</h1>");
+		for (int i = 0; i < portfolioSize; i++) {
+			StockInterface tempS = stocks[i];
+			resStr += ((Stock) tempS).getHtmlDescription() + "<br>";
+		}
+		resStr += "Total Portfolio Value is :" + this.getTotalValue()
+				+ "$.<br>" + "Total Stocks Value :" + this.getStocksValue()
+				+ "$. <br>" + "Balance is:" + this.balance + "$.";
+		return resStr;
 	}
 
 	public static int getMaxSize() {
 		return MAX_PORTFOLIO_SIZE;
 	}
 
+	/**
+	 * This method finds a stock by its symbol validance at first.
+	 * 
+	 * @author Oz Gonen
+	 * @since 01.06.15
+	 */
+
 	public StockInterface findStock(String symbol) {
+		int i = 0;
+		if (symbol == null) {
+			return null;
+		}
+		for (i = 0; i < this.portfolioSize; i++) {
+			if (symbol.equals(this.stocks[i].getSymbol())) {
+				return this.stocks[i];
+			}
+		}
 		
-		for (int i = 0; i < getPortfolioSize(); i++) {
-			if (stocks[i].getSymbol().equals(symbol)) 
-					return this.stocks[i];
-		}
 		return null;
-		}
+	}
 }
